@@ -19,13 +19,6 @@ module.exports = (setup) => {
     help: {
       command: `
 set -e  
-# git config core.excludesFile .git/.gitignore_local
-
-# echo -e "\n      Press enter to continue\n"
-# read
-
-# source .env
-# source .env.sh
 export NODE_OPTIONS=""
         
 cat <<EEE

@@ -216,9 +216,7 @@
     <div id="handler2">
       <span>Hover Handler</span>
       <!-- <button popovertarget="popoverhover" data-popover-hover="3000:5000">This is anchor (hover): Show popover</button> -->
-      <button popovertarget="popoverhover" data-popover-hover>
-        hover
-      </button>
+      <button interestfor="popoverhover">hover</button>
       <span>Hover Handler</span>
     </div>
     <div id="popoverhover" popover="manual" data-popover contenteditable>
@@ -240,7 +238,7 @@ bindHover();
 
       import "./preprocessed.js";
 
-      import bindHover from "./bindHover.js";
+      // import bindHover from "./bindHover.js";
 
       const editor = await new Promise((resolve) => {
         document.addEventListener("aceOnLoad", (event) => {
@@ -256,8 +254,15 @@ bindHover();
       const css =
         location.href.replace(/^(.*)\/[^\/]+$/, "$1") + "/popover.css";
 
+      let lastState = {};
       const aceUpdate = debounce(function (opt) {
-        const { x, y } = opt || {};
+        const { x, y, mode } = opt || {};
+
+        if (!["popovertarget", "interestfor"].includes(mode)) {
+          throw new Error(
+            `aceUpdate mode ${mode} is not supported, should be in ['popovertarget', 'interestfor']`,
+          );
+        }
 
         const currentPosition = document.querySelector(
           '.radios input[type="radio"][name="position"]:checked',
@@ -275,14 +280,24 @@ bindHover();
           style = ` style="position: absolute; left: ${x}px; top: ${y}px;"`;
         }
 
+        const newState = {
+          mode,
+          style,
+          cls,
+        };
+        if (JSON.stringify(lastState) === JSON.stringify(newState)) {
+          return;
+        }
+        lastState = newState;
         const content = `
 <link rel="stylesheet" href="${css}" />        
 
-<button popovertarget="elemnetid"${style}>toggle button</button>
+// use attribute '${mode}' for ${mode === "interestfor" ? "hover" : "click"} behaviour
+<button ${mode}="elemnetid"${style}>toggle button</button>
 
-<div id="elemnetid" popover="manual" data-popover contenteditable${cls}>
-  This is popover [contenteditable] 1
-  <button popovertarget="elemnetid" popovertargetaction="hide">close button</button>
+<div id="elemnetid" popover="manual" data-popover${cls}>
+  Popover content
+  <button popovertarget="elemnetid" popovertargetaction="hide">optional close button</button>
 </div>
 `;
         editor.setValue(content);
@@ -291,7 +306,7 @@ bindHover();
         }, 300);
       }, 300);
 
-      bindHover();
+      // bindHover();
 
       const element = document.querySelector(
         '[popovertarget="bindhover"]',
@@ -302,7 +317,7 @@ bindHover();
         (x, y) => {
           element.style.left = `${x}px`;
           element.style.top = `${y}px`;
-          aceUpdate({ x, y });
+          aceUpdate({ x, y, mode: "popovertarget" });
         },
         () => {
           const s = getStyle(element);
@@ -316,7 +331,7 @@ bindHover();
           const el = document.getElementById("handler2");
           el.style.left = `${x}px`;
           el.style.top = `${y}px`;
-          aceUpdate({ x, y });
+          aceUpdate({ x, y, mode: "interestfor" });
         },
         () => {
           const s = getStyle(document.getElementById("handler2"));
@@ -357,7 +372,7 @@ bindHover();
           popover.classList.add(value);
         });
         console.log("radioChanged: ", value);
-        aceUpdate();
+        aceUpdate({ mode: "popovertarget" });
       }
 
       handleRadio({
@@ -439,7 +454,7 @@ bindHover();
         },
       );
     </script>
-    <div style="position: absolute">
+    <!-- <div style="position: absolute">
       <span style="cursor: move">|||</span>
       <button popovertarget="elementid" popovertargetaction="show">
         anchor
@@ -450,14 +465,14 @@ bindHover();
       <button popovertarget="elementid" popovertargetaction="hide">
         Close
       </button>
-    </div>
+    </div> -->
 
     <br />
     <br />
     <br />
     <br />
 
-    <!-- <button popovertarget="elemnetid" style="position: absolute; left: 1086px; top: 518px;">toggle button</button>
+    <!-- <button interestfor="elemnetid" style="position: absolute; left: 906px; top: 185px;">toggle button</button>
 
 <div id="elemnetid" popover="manual" data-popover contenteditable>
   This is popover [contenteditable] 1
@@ -569,5 +584,14 @@ bindHover();
       src="https://stopsopa.github.io/ace-editor-webcomponent/ace-web-component.js"
       data-main-ace="https://stopsopa.github.io/ace-editor-webcomponent/noprettier/ace/ace-builds-1.43.4/src-min-noconflict/ace.js"
     ></script>
+
+    <script
+  src="https://cdn.jsdelivr.net/gh/MarketingPipeline/GitHub-Ribbon-Web-Component/dist/github-ribbon-wc.min.js"
+  defer
+></script>
+
+<github-ribbon link="https://github.com/stopsopa/skill-popover-api" type="right" color="#679d2c"
+  >Fork me on GitHub</github-ribbon
+>
   </body>
 </html>
