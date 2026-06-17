@@ -55,7 +55,7 @@
         }
       }
     </style>
-    <link rel="stylesheet" href="popover.css" />
+    <link rel="stylesheet" href="../skills/popover-api/assets/popover.css" />
   </head>
   <body class="layout bg" toc>
     <div class="radios">
@@ -252,7 +252,8 @@ bindHover();
       const radios = document.querySelector(".radios");
 
       const css =
-        location.href.replace(/^(.*)\/[^\/]+$/, "$1") + "/popover.css";
+        location.href.replace(/^(.*)\/[^\/]+\/[^\/]*$/, "$1") +
+        "/skills/popover-api/assets/popover.css";
 
       let lastState = {};
       const aceUpdate = debounce(function (opt) {
@@ -586,12 +587,15 @@ bindHover();
     ></script>
 
     <script
-  src="https://cdn.jsdelivr.net/gh/MarketingPipeline/GitHub-Ribbon-Web-Component/dist/github-ribbon-wc.min.js"
-  defer
-></script>
+      src="https://cdn.jsdelivr.net/gh/MarketingPipeline/GitHub-Ribbon-Web-Component/dist/github-ribbon-wc.min.js"
+      defer
+    ></script>
 
-<github-ribbon link="https://github.com/stopsopa/skill-popover-api" type="right" color="#679d2c"
-  >Fork me on GitHub</github-ribbon
->
+    <github-ribbon
+      link="https://github.com/stopsopa/skill-popover-api"
+      type="right"
+      color="#679d2c"
+      >Fork me on GitHub</github-ribbon
+    >
   </body>
 </html>
