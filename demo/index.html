@@ -413,7 +413,7 @@ bindHover();
 
       const blockHorizontal = document.getElementById("blockHorizontal");
       blockHorizontal.addEventListener("change", (e) => {
-        document.body.style.overflowX = e.target.checked ? "hidden" : "auto";
+        document.body.style.overflowY = e.target.checked ? "hidden" : "auto";
       });
 
       function debounce(fn, delay) {
