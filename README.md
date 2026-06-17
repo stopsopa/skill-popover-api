@@ -20,6 +20,7 @@ Use popover api skill to render element with id **popover** on top of button
 with class **trigger**.
 Use class **bottom** for positioning the popover.
 Popover should show and hide (toggle) every time I press **button.trigger**
+In the corner of the popover render "x" button which once clicked should close the popover.
 
 ```
 
