@@ -193,7 +193,8 @@
       >
     </div>
     <div style="margin-top: 10px">
-      Offset: <input type="range" id="offsetRange" min="0" max="100" />
+      Offset:
+      <input type="range" id="offsetRange" min="0" max="100" value="10" />
       <span id="offsetVal"></span>
       <label style="margin-left: 20px">
         <input type="checkbox" id="blockHorizontal" /> block horizontal checkbox
@@ -238,8 +239,6 @@ bindHover();
 
       import "./preprocessed.js";
 
-      // import bindHover from "./bindHover.js";
-
       const editor = await new Promise((resolve) => {
         document.addEventListener("aceOnLoad", (event) => {
           // https://stopsopa.github.io/ace-editor-webcomponent/learning/008_ace_async_loader/dynamic.html#aceonload-event
@@ -249,7 +248,19 @@ bindHover();
         });
       });
 
+      function getOffset(element) {
+        const initialOffset = getComputedStyle(element)
+          .getPropertyValue("--popover-offset")
+          .trim();
+        return parseInt(initialOffset, 10) || 0;
+      }
+
+      const popover = document.getElementById("bindhover");
+
       const radios = document.querySelector(".radios");
+
+      const offsetRange = document.getElementById("offsetRange"); // input[type=range]
+      const offsetVal = document.getElementById("offsetVal"); // span next to input[type=range]
 
       const css =
         location.href.replace(/^(.*)\/[^\/]+\/[^\/]*$/, "$1") +
@@ -257,7 +268,13 @@ bindHover();
 
       let lastState = {};
       const aceUpdate = debounce(function (opt) {
-        const { x, y, mode } = opt || {};
+        const {
+          x = lastState?.x,
+          y = lastState?.y,
+          mode = lastState?.mode || "popovertarget",
+        } = opt || {};
+
+        console.log("lastState", lastState, { x, y, mode });
 
         if (!["popovertarget", "interestfor"].includes(mode)) {
           throw new Error(
@@ -278,14 +295,24 @@ bindHover();
         let style = "";
 
         if (x !== undefined && y !== undefined) {
-          style = ` style="position: absolute; left: ${x}px; top: ${y}px;"`;
+          style += `position: absolute; left: ${x}px; top: ${y}px;`;
+        }
+
+        const v = offsetRange.value;
+        const offset = parseInt(v, 10) || 0;
+
+        if (offset) {
+          style += `--popover-offset: ${offset}px;`;
         }
 
         const newState = {
           mode,
           style,
           cls,
+          x,
+          y,
         };
+
         if (JSON.stringify(lastState) === JSON.stringify(newState)) {
           return;
         }
@@ -294,7 +321,7 @@ bindHover();
 <link rel="stylesheet" href="${css}" />        
 
 // use attribute '${mode}' for ${mode === "interestfor" ? "hover" : "click"} behaviour
-<button ${mode}="elemnetid"${style}>toggle button</button>
+<button ${mode}="elemnetid"${style ? ` style="${style}"` : ""}>toggle button</button>
 
 <div id="elemnetid" popover="manual" data-popover${cls}>
   Popover content
@@ -306,8 +333,6 @@ bindHover();
           editor.clearSelection();
         }, 300);
       }, 300);
-
-      // bindHover();
 
       const element = document.querySelector(
         '[popovertarget="bindhover"]',
@@ -372,7 +397,6 @@ bindHover();
           );
           popover.classList.add(value);
         });
-        console.log("radioChanged: ", value);
         aceUpdate({ mode: "popovertarget" });
       }
 
@@ -384,31 +408,20 @@ bindHover();
         onChange: radioChange,
       });
 
-      const popover = document.getElementById("bindhover");
       const invoker = document.querySelector(`[popovertarget="${popover.id}"]`);
 
       popover.showPopover({
         source: invoker,
       }); // enable by default
 
-      const offsetRange = document.getElementById("offsetRange");
-      const offsetVal = document.getElementById("offsetVal");
-
-      // Initialize from CSS
-      const initialOffset = getComputedStyle(popover)
-        .getPropertyValue("--popover-offset")
-        .trim();
-      const initialValue = parseInt(initialOffset, 10) || 0;
-      offsetRange.value = initialValue;
-      offsetVal.textContent = `${initialValue}px`;
-
-      offsetRange.addEventListener("input", (e) => {
-        const val = e.target.value;
+      range(offsetRange, (val) => {
         const popovers = document.querySelectorAll("[data-popover]");
         popovers.forEach((p) => {
           p.style.setProperty("--popover-offset", `${val}px`);
         });
         offsetVal.textContent = `${val}px`;
+
+        aceUpdate({});
       });
 
       const blockHorizontal = document.getElementById("blockHorizontal");
@@ -426,6 +439,17 @@ bindHover();
             fn.apply(context, args);
           }, delay);
         };
+      }
+
+      function range(element, event, onLoad = true) {
+        function hc() {
+          event(parseInt(element.value, 10));
+        }
+        element.addEventListener("change", hc);
+        element.addEventListener("input", hc);
+        if (onLoad) {
+          hc();
+        }
       }
     </script>
     <br />

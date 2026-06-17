@@ -7,6 +7,8 @@ https://youtu.be/jJUuuYuEykk?t=3478
 
 more: https://github.com/johnlindquist/skill-publish-skill/blob/main/skills/publish-skill/SKILL.md
 
+theoretically it should appear here: https://www.skills.sh/?q=popover-api
+
 ```sh
 
 npx skills add stopsopa/skill-popover-api
