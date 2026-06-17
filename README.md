@@ -29,7 +29,7 @@ Popover should show and hide (toggle) every time I press **button.trigger**
 
 Use popover api skill to show popover (element with id **popover**) every time
 user hovers over element with class **.hover**.
-Use positioning class from available list **right-top**
+Use positioning class **right-top** from available list
 
 ```
 
