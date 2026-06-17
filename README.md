@@ -16,7 +16,8 @@ npx skills add stopsopa/skill-popover-api
 
 ```
 
-Use popover api skill to render element with id **popover** on top of button with class **trigger**.
+Use popover api skill to render element with id **popover** on top of button
+with class **trigger**.
 Use class **bottom** for positioning the popover.
 Popover should show and hide (toggle) every time I press **button.trigger**
 
