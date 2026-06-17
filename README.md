@@ -7,6 +7,7 @@ Install:
 
 ```sh
 
+npm install -g skills
 npx skills add stopsopa/skill-popover-api
 
 ```
