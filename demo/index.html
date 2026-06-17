@@ -436,38 +436,6 @@ bindHover();
     </ace-editor>
     <br />
 
-    <script type="module">
-      import drag, { getStyle } from "./drag.js";
-
-      const parent = document.querySelector(
-        '[popovertarget="elementid"]',
-      ).parentNode;
-      const handle = parent.querySelector("span");
-      drag(
-        handle,
-        (x, y) => {
-          parent.style.left = `${x}px`;
-          parent.style.top = `${y}px`;
-        },
-        () => {
-          const s = getStyle(parent);
-          return { x: parseInt(s.left, 10) || 0, y: parseInt(s.top, 10) || 0 };
-        },
-      );
-    </script>
-    <!-- <div style="position: absolute">
-      <span style="cursor: move">|||</span>
-      <button popovertarget="elementid" popovertargetaction="show">
-        anchor
-      </button>
-    </div>
-    <div id="elementid" popover="manual" popover data-popover contenteditable>
-      stuff in popover
-      <button popovertarget="elementid" popovertargetaction="hide">
-        Close
-      </button>
-    </div> -->
-
     <br />
     <br />
     <br />
