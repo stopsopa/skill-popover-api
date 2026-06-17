@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      :root {
+        --popover-offset: 10px;
+      }
+      #handler,
+      #handler2 {
+        z-index: 5;
+        background-color: white;
+        position: absolute;
+        width: max-content;
+        span {
+          border: 1px solid #ccc;
+          cursor: pointer;
+          padding: 3px;
+          user-select: none;
+        }
+        border: 1px solid blueviolet;
+        padding: 5px;
+      }
+      #handler2 {
+        left: 550px;
+        border-color: forestgreen;
+      }
+      body [popover] {
+        box-shadow: 0 0 8px #616060;
+      }
+      .radios {
+        display: inline-grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        label {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          padding: 3px 8px;
+          border: 1px solid #eee;
+          cursor: pointer;
+        }
+        label:hover {
+          background: #f9f9f9;
+        }
+        label:has(input[value^="cover-"]) {
+          background: #f1f1f1;
+        }
+        label:has(input[value^="cover-"]):hover {
+          background: #e5e5e5;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="popover.css" />
+  </head>
+  <body class="layout bg" toc>
+    <div class="radios">
+      <label title="topleft">
+        <input type="radio" name="position" value="topleft" />topleft</label
+      >
+      <label title="top-left">
+        <input type="radio" name="position" value="top-left" />top-left</label
+      >
+      <label title="top">
+        <input type="radio" name="position" value="top" />top
+        <span style="color: blue">(default)</span></label
+      >
+      <label title="top-right">
+        <input type="radio" name="position" value="top-right" />top-right</label
+      >
+      <label title="topright">
+        <input type="radio" name="position" value="topright" />topright</label
+      >
+
+      <label title="left-top">
+        <input type="radio" name="position" value="left-top" />left-top</label
+      >
+      <label title="cover-top-left">
+        <input
+          type="radio"
+          name="position"
+          value="cover-top-left"
+        />cover-top-left</label
+      >
+      <label title="cover-top">
+        <input type="radio" name="position" value="cover-top" />cover-top</label
+      >
+      <label title="cover-top-right">
+        <input
+          type="radio"
+          name="position"
+          value="cover-top-right"
+        />cover-top-right</label
+      >
+      <label title="right-top">
+        <input type="radio" name="position" value="right-top" />right-top</label
+      >
+
+      <label title="left">
+        <input type="radio" name="position" value="left" />left</label
+      >
+      <label title="cover-left">
+        <input
+          type="radio"
+          name="position"
+          value="cover-left"
+        />cover-left</label
+      >
+      <label title="center">
+        <input type="radio" name="position" value="center" />center</label
+      >
+      <label title="cover-right">
+        <input
+          type="radio"
+          name="position"
+          value="cover-right"
+        />cover-right</label
+      >
+      <label title="right">
+        <input type="radio" name="position" value="right" />right</label
+      >
+
+      <label title="left-bottom">
+        <input
+          type="radio"
+          name="position"
+          value="left-bottom"
+        />left-bottom</label
+      >
+      <label title="cover-bottom-left">
+        <input
+          type="radio"
+          name="position"
+          value="cover-bottom-left"
+        />cover-bottom-left</label
+      >
+      <label title="cover-bottom">
+        <input
+          type="radio"
+          name="position"
+          value="cover-bottom"
+        />cover-bottom</label
+      >
+      <label title="cover-bottom-right">
+        <input
+          type="radio"
+          name="position"
+          value="cover-bottom-right"
+        />cover-bottom-right</label
+      >
+      <label title="right-bottom">
+        <input
+          type="radio"
+          name="position"
+          value="right-bottom"
+        />right-bottom</label
+      >
+
+      <label title="bottomleft">
+        <input
+          type="radio"
+          name="position"
+          value="bottomleft"
+        />bottomleft</label
+      >
+      <label title="bottom-left">
+        <input
+          type="radio"
+          name="position"
+          value="bottom-left"
+        />bottom-left</label
+      >
+      <label title="bottom">
+        <input type="radio" name="position" value="bottom" />bottom</label
+      >
+      <label title="bottom-right">
+        <input
+          type="radio"
+          name="position"
+          value="bottom-right"
+        />bottom-right</label
+      >
+      <label title="bottomright">
+        <input
+          type="radio"
+          name="position"
+          value="bottomright"
+        />bottomright</label
+      >
+    </div>
+    <div style="margin-top: 10px">
+      Offset: <input type="range" id="offsetRange" min="0" max="100" />
+      <span id="offsetVal"></span>
+      <label style="margin-left: 20px">
+        <input type="checkbox" id="blockHorizontal" /> block horizontal checkbox
+      </label>
+    </div>
+    <hr />
+
+    <div id="handler">
+      <span>Dragging Handler</span>
+      <button popovertarget="bindhover">click</button>
+      <span>Dragging Handler</span>
+    </div>
+    <div id="bindhover" popover="manual" data-popover contenteditable>
+      This is popover [contenteditable] 1
+      <button popovertarget="bindhover" popovertargetaction="hide">
+        Close
+      </button>
+    </div>
+
+    <div id="handler2">
+      <span>Hover Handler</span>
+      <!-- <button popovertarget="popoverhover" data-popover-hover="3000:5000">This is anchor (hover): Show popover</button> -->
+      <button popovertarget="popoverhover" data-popover-hover>
+        hover
+      </button>
+      <span>Hover Handler</span>
+    </div>
+    <div id="popoverhover" popover="manual" data-popover contenteditable>
+      <pre>
+import bindHover from "./bindHover.js";
+import bindHover from "urlwizzard.schema://urlwizzard.hostnegotiated/pages/js/popper/html-vanilla/bindHover.js";
+
+bindHover();
+</pre
+      >
+      <button popovertarget="popoverhover" popovertargetaction="hide">
+        Close
+      </button>
+    </div>
+
+    <script type="module">
+      import handleRadio from "./handleRadio.js";
+      import drag, { getStyle } from "./drag.js";
+
+      import "./preprocessed.js";
+
+      import bindHover from "./bindHover.js";
+
+      const editor = await new Promise((resolve) => {
+        document.addEventListener("aceOnLoad", (event) => {
+          // https://stopsopa.github.io/ace-editor-webcomponent/learning/008_ace_async_loader/dynamic.html#aceonload-event
+          const editor = event.detail.editor;
+
+          resolve(editor);
+        });
+      });
+
+      const radios = document.querySelector(".radios");
+
+      const css =
+        location.href.replace(/^(.*)\/[^\/]+$/, "$1") + "/popover.css";
+
+      const aceUpdate = debounce(function (opt) {
+        const { x, y } = opt || {};
+
+        const currentPosition = document.querySelector(
+          '.radios input[type="radio"][name="position"]:checked',
+        ).value;
+
+        let cls = "";
+
+        if (currentPosition !== "top") {
+          cls = ` class="${currentPosition}"`;
+        }
+
+        let style = "";
+
+        if (x !== undefined && y !== undefined) {
+          style = ` style="position: absolute; left: ${x}px; top: ${y}px;"`;
+        }
+
+        const content = `
+<link rel="stylesheet" href="${css}" />        
+
+<button popovertarget="elemnetid"${style}>toggle button</button>
+
+<div id="elemnetid" popover="manual" data-popover contenteditable${cls}>
+  This is popover [contenteditable] 1
+  <button popovertarget="elemnetid" popovertargetaction="hide">close button</button>
+</div>
+`;
+        editor.setValue(content);
+        setTimeout(() => {
+          editor.clearSelection();
+        }, 300);
+      }, 300);
+
+      bindHover();
+
+      const element = document.querySelector(
+        '[popovertarget="bindhover"]',
+      ).parentNode;
+
+      drag(
+        element,
+        (x, y) => {
+          element.style.left = `${x}px`;
+          element.style.top = `${y}px`;
+          aceUpdate({ x, y });
+        },
+        () => {
+          const s = getStyle(element);
+          return { x: parseInt(s.left, 10) || 0, y: parseInt(s.top, 10) || 0 };
+        },
+      );
+
+      drag(
+        document.getElementById("handler2"),
+        (x, y) => {
+          const el = document.getElementById("handler2");
+          el.style.left = `${x}px`;
+          el.style.top = `${y}px`;
+          aceUpdate({ x, y });
+        },
+        () => {
+          const s = getStyle(document.getElementById("handler2"));
+          return { x: parseInt(s.left, 10) || 0, y: parseInt(s.top, 10) || 0 };
+        },
+      );
+
+      function radioChange(value) {
+        const popovers = document.querySelectorAll("[data-popover]");
+        popovers.forEach((popover) => {
+          popover.classList.remove(
+            "topleft",
+            "top-left",
+            "top",
+            "top-right",
+            "topright",
+            "left-top",
+            "left",
+            "left-bottom",
+            "center",
+            "right-top",
+            "right",
+            "right-bottom",
+            "bottomleft",
+            "bottom-left",
+            "bottom",
+            "bottom-right",
+            "bottomright",
+            "cover-top-left",
+            "cover-top",
+            "cover-top-right",
+            "cover-left",
+            "cover-right",
+            "cover-bottom-left",
+            "cover-bottom",
+            "cover-bottom-right",
+          );
+          popover.classList.add(value);
+        });
+        console.log("radioChanged: ", value);
+        aceUpdate();
+      }
+
+      handleRadio({
+        name: "position",
+        delegateParent: radios,
+        initState: "top",
+        initTrigger: true,
+        onChange: radioChange,
+      });
+
+      const popover = document.getElementById("bindhover");
+      const invoker = document.querySelector(`[popovertarget="${popover.id}"]`);
+
+      popover.showPopover({
+        source: invoker,
+      }); // enable by default
+
+      const offsetRange = document.getElementById("offsetRange");
+      const offsetVal = document.getElementById("offsetVal");
+
+      // Initialize from CSS
+      const initialOffset = getComputedStyle(popover)
+        .getPropertyValue("--popover-offset")
+        .trim();
+      const initialValue = parseInt(initialOffset, 10) || 0;
+      offsetRange.value = initialValue;
+      offsetVal.textContent = `${initialValue}px`;
+
+      offsetRange.addEventListener("input", (e) => {
+        const val = e.target.value;
+        const popovers = document.querySelectorAll("[data-popover]");
+        popovers.forEach((p) => {
+          p.style.setProperty("--popover-offset", `${val}px`);
+        });
+        offsetVal.textContent = `${val}px`;
+      });
+
+      const blockHorizontal = document.getElementById("blockHorizontal");
+      blockHorizontal.addEventListener("change", (e) => {
+        document.body.style.overflowX = e.target.checked ? "hidden" : "auto";
+      });
+
+      function debounce(fn, delay) {
+        var timer = null;
+        return function () {
+          var context = this,
+            args = arguments;
+          clearTimeout(timer);
+          timer = setTimeout(function () {
+            fn.apply(context, args);
+          }, delay);
+        };
+      }
+    </script>
+    <br />
+    <br />
+    <br />
+    <ace-editor lang="html">
+      <script type="ace"></script>
+    </ace-editor>
+    <br />
+
+    <script type="module">
+      import drag, { getStyle } from "./drag.js";
+
+      const parent = document.querySelector(
+        '[popovertarget="elementid"]',
+      ).parentNode;
+      const handle = parent.querySelector("span");
+      drag(
+        handle,
+        (x, y) => {
+          parent.style.left = `${x}px`;
+          parent.style.top = `${y}px`;
+        },
+        () => {
+          const s = getStyle(parent);
+          return { x: parseInt(s.left, 10) || 0, y: parseInt(s.top, 10) || 0 };
+        },
+      );
+    </script>
+    <div style="position: absolute">
+      <span style="cursor: move">|||</span>
+      <button popovertarget="elementid" popovertargetaction="show">
+        anchor
+      </button>
+    </div>
+    <div id="elementid" popover="manual" popover data-popover contenteditable>
+      stuff in popover
+      <button popovertarget="elementid" popovertargetaction="hide">
+        Close
+      </button>
+    </div>
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <!-- <button popovertarget="elemnetid" style="position: absolute; left: 1086px; top: 518px;">toggle button</button>
+
+<div id="elemnetid" popover="manual" data-popover contenteditable>
+  This is popover [contenteditable] 1
+  <button popovertarget="elemnetid" popovertargetaction="hide">close button</button>
+</div> -->
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <p>stuff</p>
+    <hr />
+    <script
+      type="module"
+      src="https://stopsopa.github.io/ace-editor-webcomponent/ace-web-component.js"
+      data-main-ace="https://stopsopa.github.io/ace-editor-webcomponent/noprettier/ace/ace-builds-1.43.4/src-min-noconflict/ace.js"
+    ></script>
+  </body>
+</html>
