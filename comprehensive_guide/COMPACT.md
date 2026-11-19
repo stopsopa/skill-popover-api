@@ -55,6 +55,24 @@ so: no `--skill` = "let me choose", `--skill '*'` = "all, don't ask which" (stil
 
 only skill folders are copied - nothing else from the repo, no npm packages.
 
+`--skill '*'` vs `-y`:
+
+| question the CLI asks | `--skill '*'` | `-y` |
+| --- | --- | --- |
+| which skills? | all | all |
+| which agents? | **asks** | detected agents + universal `.agents/skills` |
+| project or global? | **asks** | project |
+| symlink or copy? | **asks** | symlink |
+| proceed? | **asks** | yes |
+
+`--skill '*'` answers one question, `-y` answers all of them with defaults.
+
+fully explicit, no questions:
+
+```
+npx skills add stopsopa/skill-popover-api --skill '*' -a claude-code -y
+```
+
 # daily usage (in a project that uses skills)
 
 ```
@@ -63,6 +81,27 @@ npx skills check      # is there a newer version? any local edits?
 npx skills update     # take newer versions
 npx skills update popover-api   # only one
 npx skills remove popover-api
+```
+
+# global skills (your user dir in the OS)
+
+project = `./.agents/skills` (this repo only), global = `~/.agents/skills` (all your projects).
+
+every command works on the project by default. Add `-g` for global:
+
+```
+npx skills list -g                  # show global skills
+npx skills list -g -a claude-code   # ... for one agent only
+npx skills add owner/repo -g        # install globally
+npx skills update -g                # update global ones
+npx skills remove popover-api -g    # remove a global one
+```
+
+or just look at the folders:
+
+```
+ls -la ~/.agents/skills/    # the real copies
+ls -la ~/.claude/skills/    # Claude Code's links to them
 ```
 
 # update
@@ -75,9 +114,42 @@ git add .agents .claude skills-lock.json
 git commit -m "update skills"
 ```
 
+what `update` touches:
+
+| command | updates |
+| --- | --- |
+| `npx skills update` | **asks** project or global, then all outdated skills there |
+| `npx skills update -p` | only this project (`./.agents/skills`, `./skills-lock.json`) - best for daily use |
+| `npx skills update -g` | only global (`~/.agents/skills`) |
+| `npx skills update -y` | no question: project if you are in a project dir, otherwise global |
+| `npx skills update popover-api` | only that skill |
+
+- only skills recorded in the lock file - hand-made skill folders are left alone
+- skills already up to date are skipped
+- project and global are separate, each has its own lock file
+
 nothing updates by itself. `update` overwrites local edits in the skill folder.
 
 author side: just edit `skills/popover-api/*`, commit, push. No re-publish.
+
+# remove
+
+| command | removes from |
+| --- | --- |
+| `npx skills remove popover-api` | **this project**: `./.agents/skills/popover-api`, links like `./.claude/skills/popover-api`, entry in `./skills-lock.json` |
+| `npx skills remove popover-api -g` | **your user dir**: `~/.agents/skills/popover-api` + links like `~/.claude/skills/popover-api` |
+
+- default = project. Global is untouched without `-g`
+- installed in both? removing one leaves the other, agent still sees it
+- local only - nothing changes on GitHub or skills.sh
+- in a project: commit the result (deleted files + `skills-lock.json`)
+
+where is it installed?
+
+```
+npx skills list       # project
+npx skills list -g    # global
+```
 
 # skills-lock.json
 
@@ -97,6 +169,18 @@ skills list
 ```
 
 (if `.agents/skills` + `.claude/skills` are committed too, skills already work after clone - `install` is just a check)
+
+is `-a` needed? no. Files **always** go to `./.agents/skills`. `-a` only decides which extra agent links are made:
+
+| command | `.agents/skills` | extra links |
+| --- | --- | --- |
+| `skills install` | yes | agents last picked with `skills add`, else agents detected on your machine |
+| `skills install -a claude-code` | yes | `.claude/skills/<name>` |
+| `skills install -a opencode` (or `pi`) | yes | none - they read `.agents/skills` directly |
+
+- want only `.agents/skills`, nothing else -> `skills install -a opencode`
+- Claude Code does **not** read `.agents/skills` - it needs the `.claude/skills` link (`-a claude-code`)
+- `skills install --dry-run` shows what would be created, changes nothing
 
 CI:
 
