@@ -23,14 +23,50 @@ from now on:
 
 ```
 
-npx skills add stopsopa/skill-popover-api --list
+# to test
+    npx skills add stopsopa/skill-popover-api --list
   
-  # to test
+# to install
 
-npx skills add stopsopa/skill-popover-api
-  
-  # to install
+    npx skills add stopsopa/skill-popover-api
+    npx skills add stopsopa/skill-popover-api -a claude-code
+    # With no questions at all:
+        npx skills add stopsopa/skill-popover-api -a claude-code -y
 
+    # For all your projects instead of just this one, add -g:
+        npx skills add stopsopa/skill-popover-api -a claude-code -g
+    
+
+After the project install you should have:
+    .agents/skills/popover-api/     <- the real files
+    .claude/skills/popover-api      <- link to them; this is what Claude Code reads
+    skills-lock.json  
+
+```
+
+# test locally before push
+
+```
+npx skills add . --list
+```
+
+- `.` = "use this folder as the source" instead of a GitHub repo (any local path works: `./`, `../other-repo`)
+- `--list` = only show which skills the CLI finds, install nothing
+- run it in the repo root
+
+why useful: it is the same search the CLI does for users, but on your **uncommitted** files. So before `git push` you see:
+
+- is every skill found? (wrong folder -> not on the list)
+- is `name` + `description` ok? (broken header -> skill skipped with a warning)
+- with many skills: are all listed? (same `name:` twice -> only the first one shows)
+
+`npx skills add stopsopa/skill-popover-api --list` checks the same, but for what is already **pushed** to GitHub.
+
+real local install without push (e.g. to try the skill in another project):
+
+```
+cd ../some-project
+npx skills add ../skill-popover-api
 ```
 
 # multiple skills in one repo
