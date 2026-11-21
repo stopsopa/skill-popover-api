@@ -7,6 +7,7 @@ https://github.com/stopsopa/gcp-css
 ```sh
 
 npx skills init page
+npx skills add . --list
 npx skills add stopsopa/stopsopa.github.io -s page -a claude-code universal -y
   # use to install and also to the same to update
 
