@@ -7,7 +7,7 @@ https://github.com/stopsopa/gcp-css
 ```sh
 
 npx skills init page
-npx skills add stopsopa/stopsopa.github.io -s page -a claude-code -y
+npx skills add stopsopa/stopsopa.github.io -s page -a claude-code universal -y
   # use to install and also to the same to update
 
 npx -y skills@1.9.0 experimental_install --frozen-lockfile
@@ -16,7 +16,7 @@ npx -y skills@1.9.0 experimental_install --frozen-lockfile
 # --frozen-lockfile  fail instead of modifying skills-lock.json if the restore doesn't match it (like `npm ci` vs `npm install`); already the default in CI
 
   # to fix potential issues with --frozen-lockfile
-    NODE_OPTIONS= npx -y skills@1.9.0 experimental_install --no-frozen-lockfile
+    NODE_OPTIONS= npx -y skills@1.9.0 experimental_install --no-frozen-lockfile](https://github.com/stopsopa/skill-popover-api/tree/main/comprehensive_guide)
 
 ```
 
