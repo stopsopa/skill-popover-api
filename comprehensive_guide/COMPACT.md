@@ -2,6 +2,20 @@
 # example
 https://github.com/stopsopa/gcp-css
 
+# TLDR
+
+```sh
+
+npx skills init page
+npx skills add stopsopa/stopsopa.github.io -s page -a claude-code -y
+  # use to install and also to the same to update
+
+npx -y skills@1.9.0 experimental_install --frozen-lockfile
+# to bring all skills based on skills-lock.json  
+# -y                 npx flag (not skills): auto-answers "Ok to proceed?" when skills@1.9.0 isn't in the npm cache, so the command never waits for input
+# --frozen-lockfile  fail instead of modifying skills-lock.json if the restore doesn't match it (like `npm ci` vs `npm install`); already the default in CI
+```
+
 # just create 
 
 `skills/popover-api/SKILL.md`
@@ -38,6 +52,8 @@ from now on:
 
     # For all your projects instead of just this one, add -g:
         npx skills add stopsopa/skill-popover-api -a claude-code -g
+
+    npx skills add stopsopa/stopsopa.github.io -s page -a claude-code -y
     
 
 After the project install you should have:
