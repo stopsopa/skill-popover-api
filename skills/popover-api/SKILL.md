@@ -4,7 +4,7 @@ description: Use this skill every time one desire to place one element (tooltip,
 license: GPL-2.0-only
 metadata:
   author: stopsopa
-  version: "1.0"
+  version: "1.1"
   website: https://github.com/stopsopa/skill-popover-api
 ---
 
